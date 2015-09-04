@@ -20,3 +20,4 @@ Swingline Resources:
 https://xlsxwriter.readthedocs.org
 https://dataset.readthedocs.org
 https://github.com/jantonacci/swingline
+
