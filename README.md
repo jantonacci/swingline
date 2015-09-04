@@ -17,7 +17,6 @@ Jason Antonacci<br>
 https://about.me/jason.antonacci
 
 Swingline Resources:<br>
+https://github.com/jantonacci/vmware-swingline/wiki<br>
 https://xlsxwriter.readthedocs.org<br>
-https://dataset.readthedocs.org<br>
-https://github.com/jantonacci/swingline
-
+https://dataset.readthedocs.org
