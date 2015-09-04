@@ -12,12 +12,12 @@ correlating events, and educating both customer and vendors. We need an
 automated method to accelerate review, generate results suitable for
 collaboration, and do quick statistical analysis. Swingline!
 
-Ciao,
-Jason Antonacci
+Ciao,<br>
+Jason Antonacci<br>
 https://about.me/jason.antonacci
 
-Swingline Resources:
-https://xlsxwriter.readthedocs.org
-https://dataset.readthedocs.org
+Swingline Resources:<br>
+https://xlsxwriter.readthedocs.org<br>
+https://dataset.readthedocs.org<br>
 https://github.com/jantonacci/swingline
 
