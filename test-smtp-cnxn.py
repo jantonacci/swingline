@@ -28,22 +28,22 @@ def doTcpdump():
 
     pcapProc = {}
 
-    tcpdumpLog = open("{path}/{file}{unique}.log".format(path=DIRPATH, file=TEMPLATE, unique=DATETIME), "wb")
+    tcpdumpLog = open('{path}/{file}{unique}.log'.format(path=DIRPATH, file=TEMPLATE, unique=DATETIME), 'wb')
     pcapProc['file1'] = tcpdumpLog
-    pcapProc['pcap1'] = subprocess.Popen(["tcpdump",
-                                      "-anUlpvvs0",
-                                      "tcp port {p}".format(p=SMTPPORT)],
-                                     stdout=tcpdumpLog)
+    pcapProc['pcap1'] = subprocess.Popen(['tcpdump',
+                                          '-anUlpvvs0',
+                                          'tcp port {p}'.format(p=SMTPPORT)],
+                                        stdout=tcpdumpLog)
 
-    tcpdumpCap = "{file}{unique}.pcap".format(path=DIRPATH, file=TEMPLATE, unique=DATETIME)
+    tcpdumpCap = '{file}{unique}.pcap'.format(file=TEMPLATE, unique=DATETIME)
     pcapProc['file2'] = tcpdumpCap
-    pcapProc['pcap2'] = subprocess.Popen(["tcpdump",
-                                      "-anUlps0",
-                                      "-w {file}".format(file=tcpdumpCap),
-                                      "tcp port {p}".format(p=SMTPPORT)],
-                                     cwd='/c3',
-                                     close_fds=True,
-                                     bufsize=-1)
+    pcapProc['pcap2'] = subprocess.Popen(['tcpdump',
+                                          '-anUlps0',
+                                          '-w{file}'.format(file=tcpdumpCap),
+                                          'tcp port {p}'.format(p=SMTPPORT)],
+                                       cwd='/c3',
+                                       close_fds=True,
+                                       bufsize=-1)
 
     return pcapProc
 
