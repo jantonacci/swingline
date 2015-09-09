@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# pylint:
+# pylint: disable=line-too-long
 """ Use TCP sockets to test SMTP with packet capture """
 import socket, sys, time, re, subprocess, logging
 
@@ -37,11 +37,11 @@ def smtp_queue(tcp_socket):
 def smtp_exec(tcp_socket, smtp_cmd):
     """ Execute individual SMTP commands and return error codes """
     time.sleep(1)
-    RUNTIME_LOG.debug('/> {message}'.format(message=smtp_cmd))
+    RUNTIME_LOG.debug('> {message}'.format(message=smtp_cmd))
     try:
         tcp_socket.sendall('{message}\r\n'.format(message=smtp_cmd))
-    except RuntimeError, errorcode:
-        if errorcode[0] == 32:
+    except RuntimeError:
+        if RuntimeError.args[0] == 32:
             RUNTIME_LOG.error('TCP socket closed by remote peer')
         else:
             RUNTIME_LOG.error('TCP socket error - see packet capture')
@@ -58,10 +58,10 @@ def log_reply(tcp_socket):
     #  Ex. "220 smtp.example.com ESMTP Postfix (smtp)"
     try:
         tcp_recv = tcp_socket.recv(4096)
+        RUNTIME_LOG.debug('> {message}'.format(message=tcp_recv.strip()))
     except RuntimeError, errorcode:
         RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errorcode))
 
-    RUNTIME_LOG.debug('\< {message}'.format(message=tcp_recv)),
     if not re.compile(r'^2').match(tcp_recv):
         RUNTIME_LOG.error('SMTP server responded with error code')
 
@@ -83,7 +83,7 @@ def do_pcap():
                                            '-anUlps0',
                                            '-w{file}'.format(file=pcap_bin),
                                            'tcp port {p}'.format(p=SMTPPORT)],
-                                          cwd='/c3',
+                                          cwd=DIRPATH,
                                           close_fds=True,
                                           bufsize=-1)
 
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     ## Create STDERR logging destination - incl. for BRB and development
     CONSOLE = logging.StreamHandler()
     CONSOLE.setFormatter(FMT_LOG_DEFAULT)
-    LOGFILE = logging.FileHandler('{path}/{file}{unique}.log'.format(path='/c3', file=TEMPLATE, unique=DATETIME))
+    LOGFILE = logging.FileHandler('{path}/{file}{unique}.log'.format(path=DIRPATH, file=TEMPLATE, unique=DATETIME))
     LOGFILE.setFormatter(FMT_LOG_DEFAULT)
     RUNTIME_LOG.addHandler(CONSOLE)
     RUNTIME_LOG.addHandler(LOGFILE)
