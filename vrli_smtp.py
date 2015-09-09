@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# pylint: disable=line-too-long
+# pylint: disable=indexing-exception
 """ Use TCP sockets to test SMTP with packet capture """
 import socket, sys, time, re, subprocess, logging
 
@@ -40,8 +40,8 @@ def smtp_exec(tcp_socket, smtp_cmd):
     RUNTIME_LOG.debug('> {message}'.format(message=smtp_cmd))
     try:
         tcp_socket.sendall('{message}\r\n'.format(message=smtp_cmd))
-    except RuntimeError:
-        if RuntimeError.args[0] == 32:
+    except IOError, errno:
+        if errno == 32:
             RUNTIME_LOG.error('TCP socket closed by remote peer')
         else:
             RUNTIME_LOG.error('TCP socket error - see packet capture')
@@ -59,8 +59,8 @@ def log_reply(tcp_socket):
     try:
         tcp_recv = tcp_socket.recv(4096)
         RUNTIME_LOG.debug('> {message}'.format(message=tcp_recv.strip()))
-    except RuntimeError, errorcode:
-        RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errorcode))
+    except IOError, errno:
+        RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errno))
 
     if not re.compile(r'^2').match(tcp_recv):
         RUNTIME_LOG.error('SMTP server responded with error code')
@@ -93,6 +93,7 @@ def do_pcap():
 
 def undo_pcap(pcap_dict):
     """ Terminate packet captures and uninstall tcpdump RPM """
+    # TODO: for PROC in $(ps -ef | grep tcpdump | grep -v grep | awk '{print $2}'); do kill $PROC; done
     pcap_dict['pcap1'].terminate()
     pcap_dict['pcap2'].terminate()
     pcap_dict['pcap2'].wait()
