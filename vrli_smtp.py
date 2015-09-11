@@ -28,6 +28,10 @@ def smtp_queue(tcp_socket):
                  'RSET',
                  'HELO {name}'.format(name=socket.getfqdn()),
                  'NOOP',
+                 'MAIL FROM:<c3-admin@{name}>'.format(name=socket.getfqdn()),
+                 'RCPT TO:<c3-monitor@vmware.com>',
+                 'DATA',
+                 'Subject: {file} - C3 vRLI SMTP test\r\n{file} - C3 vRLI SMTP test\r\n.'.format(file=__file__),
                  'QUIT']
     for verb in verb_list:
         socket_error = smtp_exec(tcp_socket, verb)
@@ -59,8 +63,8 @@ def log_reply(tcp_socket):
     try:
         tcp_recv = tcp_socket.recv(4096)
         RUNTIME_LOG.debug('> {message}'.format(message=tcp_recv.strip()))
-    except IOError, errno:
-        RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errno))
+    except RuntimeError, errorcode:
+        RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errorcode))
 
     if not re.compile(r'^2').match(tcp_recv):
         RUNTIME_LOG.error('SMTP server responded with error code')
