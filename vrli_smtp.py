@@ -62,7 +62,7 @@ def log_reply(tcp_socket):
     #  Ex. "220 smtp.example.com ESMTP Postfix (smtp)"
     try:
         tcp_recv = tcp_socket.recv(4096)
-        RUNTIME_LOG.debug('> {message}'.format(message=tcp_recv.strip()))
+        RUNTIME_LOG.debug('< {message}'.format(message=tcp_recv.strip()))
     except RuntimeError, errorcode:
         RUNTIME_LOG.error('TCP socket receive error {code}'.format(code=errorcode))
 
