@@ -1,7 +1,7 @@
 #!python
 #pylint: disable=line-too-long
 
-""" Convert Microsoft Outlook .MSG files to .TXT
+""" Convert Microsoft Outlook .MSG files to .TXT using MsgText.exe from http://sourceforge.net/projects/msgtext/
 and count totals for:
  FROM: email address (various)
  TO: email address c3-monitor@vmware.com
