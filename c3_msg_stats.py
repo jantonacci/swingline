@@ -11,7 +11,7 @@ and count totals for:
 __author__ = 'jantonacci'
 __version__ = '2.0' # first release was cmd.exe batch file
 
-import os, sys, time, logging, re, hashlib, shutil, subprocess, multiprocessing
+import os, sys, time, logging, re, hashlib, shutil, subprocess
 
 WORKING_DIR = 'c:\opt\c3_py'
 
