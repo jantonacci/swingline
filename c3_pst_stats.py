@@ -9,36 +9,61 @@ and counts totals for:
  VMware Cloud Command Center (C3) Error IDs
 """
 
-__author__ = 'jantonacci'
-__version__ = '2.7.0' # first release was cmd.exe batch file
+__author__ = 'jantonacci'   # So I wrote a thing
+__version__ = '2.7.0'       # First release was cmd.exe batch file, LULZ
 
-import os, sys,logging,time, re, codecs
+import os, sys, logging, time, re, codecs
 from win32com.client import Dispatch
 
 def main():
     """
-    :desc  : main function
-    :rtype : file
+    - description - main function
     """
     # Set the default options in main dictionary
     main_dict = default_options()
 
+    main_dict = process_folder('non_emea', main_dict)
+    main_dict = process_folder('non_nasa', main_dict)
+
+    return 0
+
+def process_folder(folder_name, main_dict):
+    """
+    - description - Process the list from main_dict identified by folder_name
+    :param arg1: folder_name
+    :type arg1: basestring
+    :param arg2: main_dict
+    :type arg2: dict
+    :returns : main_dict
+    :rtype : dict
+    """
     main_dict = clr_summation(main_dict)
-    main_dict['olfolder'] = folder_path(main_dict['non_emea'])
+    main_dict['olfolder'] = folder_path(main_dict[folder_name])
     main_dict = msg_summation(main_dict)
     report_c3err(main_dict)
 
-    main_dict = clr_summation(main_dict)
-    main_dict['olfolder'] = folder_path(main_dict['non_nasa'])
-    main_dict = msg_summation(main_dict)
-    report_c3err(main_dict)
+    return main_dict
 
 def clr_summation(main_dict):
+    """
+    - description - Clear main dictionary lists email and c3err for new .PST
+    :param arg1: main_dict
+    :type arg1: dict
+    :returns : main_dict
+    :rtype : dict
+    """
     main_dict['email'] = {}
     main_dict['c3err'] = {}
     return main_dict
 
 def msg_summation(main_dict):
+    """
+    - description - Populate main dictionary lists email and c3err from .PST file
+    :param arg1: main_dict
+    :type arg1: dict
+    :returns : main_dict
+    :rtype : dict
+    """
     olfolder = main_dict['olfolder'].Name
     msg_queue = main_dict['olfolder'].Items
     main_dict['email'].update({'Total Messages': msg_queue.Count})
@@ -80,7 +105,10 @@ def msg_summation(main_dict):
 
 def report_c3err(main_dict):
     """
-    :desc  : Generate the report from main dictionary lists email and c3err
+    - description - Write main dictionary lists email and c3err to a text report
+    :param arg1: main_dict
+    :type arg1: dict
+    :returns : error
     :rtype : int
     """
     with open(main_dict['fpath_c3_rprt_txt'], 'a') as file_rpt:
@@ -100,6 +128,13 @@ def report_c3err(main_dict):
     return 0
 
 def folder_path(olfolder_path):
+    """
+    - description - Navigate through Outlook objects to return desired Outlook folder object
+    :param arg1: main_dict
+    :type arg1: list
+    :returns : Outlook Folder
+    :rtype : object
+    """
     olns = connect_profile(olfolder_path[0])
     shared_account = find_folder(olfolder_path[1], olns)
     shared_inbox = find_folder(olfolder_path[2], shared_account)
@@ -109,6 +144,13 @@ def folder_path(olfolder_path):
     return shared_subfolder
 
 def connect_profile(profile):
+    """
+    - description - Connect to Outlook NameSpace specified by profile name
+    :param arg1: string
+    :type arg1: basestring
+    :returns : Outlook NameSpace
+    :rtype : object
+    """
     # Connect to Outlook, which has to be running
     try:
         olns = Dispatch("Outlook.Application").GetNamespace("MAPI")
@@ -120,6 +162,15 @@ def connect_profile(profile):
         sys.exit(1)
 
 def find_folder(target_folder, parent_folder):
+    """
+    - description - Write main dictionary lists email and c3err to a text report
+    :param arg1: Outlook Folder Name
+    :type arg1: basestring
+    :param arg2: Outlook Folder Object
+    :type arg2: object
+    :returns : Outlook Folder Object
+    :rtype : object
+    """
     try:
         for folder in parent_folder.Folders:
             folder_name = DECODEUNICODESTRING(folder.Name)
@@ -127,10 +178,17 @@ def find_folder(target_folder, parent_folder):
                 return folder
         return None
     except RuntimeError as error:
-        print (error)
+        print error
         return None
 
 def msg_iterate(folder):
+    """
+    - description - Return desired Outlook folder object from parent Outlook folder object
+    :param arg1: Outlook Folder Name
+    :type arg1: basestring
+    :returns : error
+    :rtype : int
+    """
     messages = folder.Items
     #message = messages.GetFirst()
     message = messages.GetLast()
@@ -140,9 +198,14 @@ def msg_iterate(folder):
         print 'FROM:\t{f}\n\tSubject:\t{s}'.format(f=msg_from, s=msg_subj)
         message = messages.GetNext()
 
+    return 0
+
 def print_c3err(main_dict):
     """
-    :desc  : Print the report from function report_c3err
+    - description - Print report file to console
+    :param arg1: main_dict
+    :type arg1: dict
+    :returns : error
     :rtype : int
     """
     file_rpt = open(main_dict['fpath_c3_rprt_txt'], 'r')
@@ -156,11 +219,12 @@ def print_c3err(main_dict):
 
 def default_options():
     """
-    :desc  : Create dictionary of runtime options for later reference
+    - description - Create dictionary of runtime options for later reference
+    :returns : main_dict
     :rtype : dict
     """
     main_dict = {'tstamp': time.strftime("%Y%m%d-%H%M%S"),
-                 'dir_msg_dst': os.path.abspath(os.path.join(os.environ['USERPROFILE'],'Desktop')),
+                 'dir_msg_dst': os.path.abspath(os.path.join(os.environ['USERPROFILE'], 'Desktop')),
                  'non_emea': ['Non-EMEA', 'c3-mbx-1', 'Inbox', '5. Non-EMEA'],
                  'non_nasa': ['Non-NASA', 'c3-mbx-2', 'Inbox', '5. Non-NASA'],
                  'olfolder': '',
@@ -173,8 +237,6 @@ def default_options():
 
 if __name__ == '__main__':
     DECODEUNICODESTRING = lambda x: codecs.latin_1_encode(x)[0]
-    WORKING_DIR = r'c:\opt\c3_py'
-    ORIG_DIR = os.curdir
 
     ## Setup logging to flexibly handle script progress notices and exceptions from
     ## module logging.  Create logging message and date format instance for common
@@ -191,8 +253,6 @@ if __name__ == '__main__':
     RUNTIME_LOG.setLevel(logging.INFO)
     RUNTIME_LOG.addHandler(CONSOLE)
 
-    os.chdir(WORKING_DIR)
     main()
-    os.chdir(ORIG_DIR)
 
 #EOF
