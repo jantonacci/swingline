@@ -1,7 +1,13 @@
 #!/usr/bin/python
 # pylint: disable=indexing-exception
 """ Use TCP sockets to test SMTP with packet capture """
-import socket, sys, time, re, subprocess, logging
+import logging
+import re
+import socket
+import subprocess
+import sys
+import time
+
 
 def main():
     """ Main function...

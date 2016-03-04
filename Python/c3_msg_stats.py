@@ -11,7 +11,15 @@ and count totals for:
 __author__ = 'jantonacci'
 __version__ = '2.7.0' # first release was cmd.exe batch file
 
-import os, sys, time, logging, re, hashlib, shutil, subprocess
+import hashlib
+import logging
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+
 
 def default_options():
     """

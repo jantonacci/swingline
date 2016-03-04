@@ -2,7 +2,9 @@
 #pylint: disable=line-too-long
 """ Insert extent names into report results for VMFS versions """
 
-import os, re, sys
+import os
+import re
+import sys
 
 
 def main():

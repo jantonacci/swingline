@@ -2,7 +2,7 @@
 #pylint: disable=line-too-long, logging-format-interpolation
 
 """ Convert Microsoft Outlook .PST files to .TXT
-using Python for Windows Extensions from http://sourceforge.net/projects/pywin32/
+using python for Windows Extensions from http://sourceforge.net/projects/pywin32/
 and counts totals for:
  FROM: email address (various)
  TO: email address c3-monitor@vmware.com
@@ -12,8 +12,15 @@ and counts totals for:
 __author__ = 'jantonacci'   # So I wrote a thing
 __version__ = '2.7.0'       # First release was cmd.exe batch file, LULZ
 
-import os, sys, logging, time, re, codecs
+import codecs
+import logging
+import os
+import re
+import sys
+import time
+
 from win32com.client import Dispatch
+
 
 def main():
     """

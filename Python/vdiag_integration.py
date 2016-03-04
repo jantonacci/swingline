@@ -1,13 +1,15 @@
 #!python
 #pylint: disable=line-too-long, logging-format-interpolation
 """
-- description - vDiag integration library for Python
+- description - vDiag integration library for python
 :todo : Write better docstring
 """
 
-import os, shutil, logging
-from logging.handlers import SysLogHandler, SocketHandler
+import logging
+import os
+import shutil
 from logging import StreamHandler
+from logging.handlers import SysLogHandler, SocketHandler
 
 __author__ = 'jantonacci'   # So I wrote a thing
 __version__ = '0.0.1'       # pre-alpha
@@ -113,7 +115,7 @@ def copy_payload(file_list=['payload_file.ext']):
 def copy_applog(file_list=['applog_file.ext']):
     err_code = copy_appfile('VDIAG_LOGDIR', file_list)
     return err_code
-    
+
 def copy_appfile(vdiag_env_var='VDIAG_APPPATH', file_list=['app_file.ext']):
     err_code = 0
     if os.environ.get(vdiag_env_var):
